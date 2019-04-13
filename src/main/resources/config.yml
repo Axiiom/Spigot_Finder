@@ -1,0 +1,4 @@
+finder-enabled: true
+max-range:
+  spawner: 35
+  diamond_ore: 50

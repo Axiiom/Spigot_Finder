@@ -1,0 +1,10 @@
+name: Finder
+version: ${project.version}
+main: net.axiiom.spigotplugins.FinderPlugin
+api-version: 1.13
+
+commands:
+  treasure:
+    description: nah
+  spawner:
+    description: nah
