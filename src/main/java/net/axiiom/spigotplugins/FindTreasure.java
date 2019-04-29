@@ -1,13 +1,61 @@
 package net.axiiom.spigotplugins;
 
+import com.mysql.jdbc.Util;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
+import org.bukkit.material.Sign;
 
 public class FindTreasure
 {
     private static int MAX_BUILD_HEIGHT = 256;
+
+    public static boolean findChest(Player _player)
+    {
+        Location loc = _player.getLocation();
+        Finder finder = new Finder(loc);
+
+        if(!finder.find(loc, new int[][]{{5,5},{5,5},{5,5}}, Material.CHEST))
+            return false;
+
+        Block found = finder.getFoundItems().get(0).getBlock();
+        BlockFace bf = signAttachedTo(found);
+
+        if(bf == null) {
+            _player.sendMessage("Chest at: " + found.getLocation().getX() + "/" + found.getLocation().getY() + "/" + found.getLocation().getZ()
+                + " does not contain a sign.");
+        } else {
+            _player.sendMessage("Sign attached to chest at: " + bf.toString());
+        }
+
+        return true;
+    }
+
+    private static BlockFace signAttachedTo(Block placed)
+    {
+        for(BlockFace b : new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST})
+        {
+            if(Utils.isWallSign(placed.getRelative(b).getType())
+                && placed.getRelative(b).getState() instanceof org.bukkit.block.Sign)
+            {
+                org.bukkit.block.Sign sign = (org.bukkit.block.Sign)placed.getRelative(b).getState();
+                BlockData bd = sign.getBlockData();
+
+                Sign s = (Sign) placed.getRelative(b).getState().getData();
+                Block attached_block = placed.getRelative(b).getRelative(s.getAttachedFace());
+
+                if (attached_block.equals(placed))
+                    return b;
+            }
+        }
+
+        return null;
+    }
+
 
     public static boolean findTreasure(Player player, Material block, int[][] area, int bounds, int spawn_layer)
     {

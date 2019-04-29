@@ -8,3 +8,5 @@ commands:
     description: nah
   spawner:
     description: nah
+  chest:
+    description: nah

@@ -14,9 +14,13 @@ public final class FinderPlugin extends JavaPlugin implements CommandExecutor {
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
+        // main startup logic
         setupConfig();
         getLogger().info("Finder Enabled!");
+
+
+        ChestSigns chestlistener = new ChestSigns();
+        getServer().getPluginManager().registerEvents(chestlistener, this);
     }
 
     @Override
@@ -36,6 +40,8 @@ public final class FinderPlugin extends JavaPlugin implements CommandExecutor {
             } else if (command.getName().equalsIgnoreCase("spawner")) {
                 int[][] range = getRange(spawner_bounds, args);
                 return FindTreasure.findTreasure(player, Material.SPAWNER, range, spawner_bounds);
+            } else if(command.getName().equalsIgnoreCase("chest")) {
+                return FindTreasure.findChest(player);
             }
 
             return false;
